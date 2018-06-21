@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 1. 扫描service注解 -->
+	<context:component-scan base-package="com.lp" />
+	
+	<!-- 2. 配置Dubbo相关信息 -->
+	<!-- 2.1 配置应用名, 是Dubbo应用的唯一命名. 是一个Provider定义一个唯一的命名. -->
+	<dubbo:application name="test-provider" />
+	
+	<!-- 2.2 配置注册中心, 服务的提供者,要向注册中心发布服务. 消费者要从注册中心订阅服务. -->
+	<!-- <dubbo:registry address="192.168.120.143:2181" protocol="zookeeper" /> -->
+	<dubbo:registry address="192.168.153.135:2181" protocol="zookeeper" />
+	
+	<!-- 2.3 协议信息, Provider和Consumer访问注册中心和相互之间的访问,使用什么协议 -->
+	<dubbo:protocol name="dubbo" port="20880" />
+	
+	<!-- 2.4 要发布什么服务. 将当前spring容器中的什么bean对象信息,发布到注册中心. -->
+	<dubbo:service interface="com.lp.service.TestService" 
+		ref="testServiceImpl" timeout="1000" retries="0"/>
+
+</beans>

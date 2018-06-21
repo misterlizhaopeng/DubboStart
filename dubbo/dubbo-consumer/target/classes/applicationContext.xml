@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 1. 扫描本地注解. 管理对象和属性依赖关系. -->
+	<context:component-scan base-package="com.lp.service" />
+	
+	<!-- 2. dubbo相关信息 -->
+	<!-- 2.1 应用信息 -->
+	<dubbo:application name="test-consumer"/>
+	
+	<!-- 2.2 配置注册中心 -->
+	<dubbo:registry protocol="zookeeper" address="192.168.153.135:2181"/>
+	
+	<!-- 2.3 协议, 可以省略. Dubbo相关服务信息是从注册中心中订阅的. 
+		Provider在发布服务的时候, 会定义协议信息.
+		所以Consumer一端配置协议信息无效. 
+		如果配置了<dubbo:protocol>代表的含义是. 当前应用可能要发布服务. 发布服务的时候,使用的协议是什么.
+	 -->
+	
+	<!-- 2.4 引用服务对象.从注册中心中,订阅对应的某一个服务. 服务的单位是接口.
+		订阅得到的服务,被Dubbo技术封装成一个代理对象. 内部实现由Dubbo决定.
+		id - 就是spring管理的对象的唯一命名. 当前标签相当于定义了一个bean标签, spring容器管理一个对象.
+		这个对象,是一个Dubbo通过订阅服务,创建的代理对象. 建议将id定义为需要使用的类型中的属性名.
+		spring的@Autowired注解,是先byType,再byName,实现属性注入的.
+	 -->
+	<dubbo:reference id="testService"
+		interface="com.lp.service.TestService"/>
+
+</beans>
